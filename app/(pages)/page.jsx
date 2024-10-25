@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import CompanyCard from "@/components/CompanyCard";
 
 const generateExcel = (companies) => {
@@ -29,8 +29,9 @@ const generateExcel = (companies) => {
 
 const Home = () => {
   const router = useRouter();
-  const [major, setMajor] = useState("");
-  const [keyword, setKeyword] = useState("");
+  const searchParams = useSearchParams(); // Retrieve query params from the URL
+  const [major, setMajor] = useState(searchParams.get("major") || ""); // Initialize from query params
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") || ""); // Initialize from query params
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -58,18 +59,14 @@ const Home = () => {
     "Nuclear Engineering",
     "Systems Engineering",
   ];
-
   const handleSearch = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      setHasSearched(true);
+    setLoading(true);
+    setError("");
 
+    try {
       const response = await fetch("/api/search", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ major, keyword }),
       });
 
@@ -77,23 +74,40 @@ const Home = () => {
       if (!response.ok) throw new Error(data.error);
 
       setCompanies(data);
+      // Save search results and parameters to sessionStorage
+      sessionStorage.setItem("searchResults", JSON.stringify(data));
+      sessionStorage.setItem(
+        "searchParams",
+        JSON.stringify({ major, keyword })
+      );
     } catch (error) {
       setError("Failed to fetch companies. Please try again.");
-      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleCompanyClick = (companyId) => {
-    router.push(`/company/${companyId}`);
+    // Pass the current search parameters when navigating to the company details page
+    router.push(`/company/${companyId}?major=${major}&keyword=${keyword}`);
   };
-
   const handleExport = () => {
     if (companies.length > 0) {
       generateExcel(companies);
     }
   };
+
+  useEffect(() => {
+    const savedResults = sessionStorage.getItem("searchResults");
+    const savedParams = sessionStorage.getItem("searchParams");
+
+    if (savedResults && savedParams) {
+      setCompanies(JSON.parse(savedResults));
+      const { major, keyword } = JSON.parse(savedParams);
+      setMajor(major);
+      setKeyword(keyword);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-navy-900 bg-gradient-to-b from-navy-800 to-navy-900">
@@ -130,7 +144,7 @@ const Home = () => {
 
             <input
               type="text"
-              placeholder="Enter keyword"
+              placeholder="Enter keyword, such as 'medicine' or 'energy'"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               className="w-full p-4 border rounded-lg bg-navy-800 text-white border-orange-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"

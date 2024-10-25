@@ -77,7 +77,7 @@ const CompanyDetails = ({ params: paramsPromise }) => {
           <span>Back to Search</span>
         </button>
 
-        <div className="bg-navy-800 rounded-lg border border-navy-600 shadow-lg p-8">
+        <div className="bg-navy-800 rounded-lg border border-orange-600 shadow-lg p-8">
           <h1 className="text-2xl md:text-3xl font-bold mb-8 text-orange-500">
             {company.name}
           </h1>

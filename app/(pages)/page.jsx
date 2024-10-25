@@ -108,7 +108,7 @@ const Home = () => {
               <select
                 value={major}
                 onChange={(e) => setMajor(e.target.value)}
-                className="w-full p-4 border rounded-lg bg-navy-800 text-white border-navy-600 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full p-4 border border-orange-500  rounded-lg bg-navy-800 text-white border-navy-600 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               >
                 <option value="">Select a major</option>
                 {majorOptions.map((option) => (
@@ -133,7 +133,7 @@ const Home = () => {
               placeholder="Enter keyword"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
-              className="w-full p-4 border rounded-lg bg-navy-800 text-white border-navy-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full p-4 border rounded-lg bg-navy-800 text-white border-orange-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
 
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
@@ -148,7 +148,7 @@ const Home = () => {
               {companies.length > 0 && (
                 <button
                   onClick={handleExport}
-                  className="px-8 py-4 bg-navy-800 text-white rounded-lg hover:bg-navy-600 transition-colors duration-200 ease-in-out"
+                  className="px-8 py-4 border border-orange-500 bg-navy-800 text-white rounded-lg hover:bg-navy-600 transition-colors duration-200 ease-in-out"
                 >
                   Export to Excel
                 </button>

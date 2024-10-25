@@ -167,24 +167,32 @@ const Home = () => {
               <div className="text-gray-300">Loading results...</div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {companies.map((company) => (
-                <CompanyCard
-                  key={company._id}
-                  company={company}
-                  onClick={() => handleCompanyClick(company._id)}
-                />
-              ))}
-              {!hasSearched ? (
-                <div className="text-gray-300 col-span-full text-center">
-                  Enter search criteria and click Search to find companies
+            <>
+              {companies.length > 0 && (
+                <div className="text-white text-center mb-4">
+                  Found {companies.length} companies
                 </div>
-              ) : companies.length === 0 ? (
-                <div className="text-gray-300 col-span-full text-center">
-                  No results found
-                </div>
-              ) : null}
-            </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {companies.map((company) => (
+                  <CompanyCard
+                    key={company._id}
+                    company={company}
+                    onClick={() => handleCompanyClick(company._id)}
+                  />
+                ))}
+                {!hasSearched ? (
+                  <div className="text-gray-300 col-span-full text-center">
+                    Enter search criteria and click Search to find companies
+                  </div>
+                ) : companies.length === 0 ? (
+                  <div className="text-gray-300 col-span-full text-center">
+                    No results found
+                  </div>
+                ) : null}
+              </div>
+            </>
           )}
         </div>
       </div>

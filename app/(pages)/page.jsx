@@ -60,15 +60,32 @@ const HomeContent = () => {
   const [error, setError] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
 
+  const updateSessionStorage = (newMajor, newKeywords) => {
+    sessionStorage.setItem(
+      "searchParams",
+      JSON.stringify({ major: newMajor, keywords: newKeywords })
+    );
+  };
+
+  const handleMajorChange = (e) => {
+    const newMajor = e.target.value;
+    setMajor(newMajor);
+    updateSessionStorage(newMajor, keywords);
+  };
+
   const handleAddKeyword = () => {
     if (keywordInput.trim() && !keywords.includes(keywordInput.trim())) {
-      setKeywords([...keywords, keywordInput.trim()]);
+      const newKeywords = [...keywords, keywordInput.trim()];
+      setKeywords(newKeywords);
+      updateSessionStorage(major, newKeywords);
       setKeywordInput("");
     }
   };
 
   const handleRemoveKeyword = (keywordToRemove) => {
-    setKeywords(keywords.filter((k) => k !== keywordToRemove));
+    const newKeywords = keywords.filter((k) => k !== keywordToRemove);
+    setKeywords(newKeywords);
+    updateSessionStorage(major, newKeywords);
   };
 
   const handleKeyPress = (e) => {
@@ -94,10 +111,6 @@ const HomeContent = () => {
 
       setCompanies(data);
       sessionStorage.setItem("searchResults", JSON.stringify(data));
-      sessionStorage.setItem(
-        "searchParams",
-        JSON.stringify({ major, keywords })
-      );
       setHasSearched(true);
     } catch (error) {
       setError("Failed to fetch companies. Please try again.");
@@ -133,12 +146,11 @@ const HomeContent = () => {
 
         <div className="max-w-2xl mx-auto space-y-8">
           <div className="flex flex-col space-y-4">
-            {/* Reduced width container for desktop */}
             <div className="w-full md:w-[70%] mx-auto">
               <div className="relative">
                 <select
                   value={major}
-                  onChange={(e) => setMajor(e.target.value)}
+                  onChange={handleMajorChange}
                   className="w-full p-4 border border-orange-500 rounded-lg bg-navy-800 text-white border-navy-600 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
                   <option value="">Select a major</option>

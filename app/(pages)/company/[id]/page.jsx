@@ -34,72 +34,88 @@ const CompanyDetails = ({ params: paramsPromise }) => {
 
   if (loading)
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div>Loading...</div>
+      <div className="min-h-screen bg-navy-900 bg-gradient-to-b from-navy-800 to-navy-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-gray-300">Loading...</div>
+        </div>
       </div>
     );
 
   if (error)
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="p-4 bg-red-50 text-red-500 rounded-lg">{error}</div>
+      <div className="min-h-screen bg-navy-900 bg-gradient-to-b from-navy-800 to-navy-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="p-4 bg-red-900/50 text-red-200 rounded-lg border border-red-700">
+            {error}
+          </div>
+        </div>
       </div>
     );
 
   if (!company) return null;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <button
-        onClick={() => router.back()}
-        className="flex items-center space-x-2 text-blue-500 hover:text-blue-600 mb-6"
-      >
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+    <div className="min-h-screen bg-navy-900 bg-gradient-to-b from-navy-800 to-navy-900">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center space-x-2 text-orange-400 hover:text-orange-300 mb-8 transition-colors duration-200"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-        <span>Back to Search</span>
-      </button>
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          <span>Back to Search</span>
+        </button>
 
-      <div className="bg-white rounded-lg border shadow-sm p-6">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">{company.name}</h1>
+        <div className="bg-navy-800 rounded-lg border border-navy-600 shadow-lg p-8">
+          <h1 className="text-2xl md:text-3xl font-bold mb-8 text-orange-500">
+            {company.name}
+          </h1>
 
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-lg font-semibold mb-2">About</h3>
-            <p className="text-gray-700">{company.about}</p>
-          </div>
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-white">About</h3>
+              <p className="text-gray-300">{company.about}</p>
+            </div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Business Model</h3>
-            <p className="text-gray-700">{company.business_model}</p>
-          </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-white">
+                Business Model
+              </h3>
+              <p className="text-gray-300">{company.business_model}</p>
+            </div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Example Projects</h3>
-            <p className="text-gray-700">{company.example_projects}</p>
-          </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-white">
+                Example Projects
+              </h3>
+              <p className="text-gray-300">{company.example_projects}</p>
+            </div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Majors Hiring</h3>
-            <div className="flex flex-wrap gap-2">
-              {company.majors_hiring.map((major) => (
-                <span
-                  key={major}
-                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                >
-                  {major}
-                </span>
-              ))}
+            <div>
+              <h3 className="text-lg font-semibold mb-3 text-white">
+                Majors Hiring
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {company.majors_hiring.map((major) => (
+                  <span
+                    key={major}
+                    className="px-4 py-2 bg-navy-900/50 text-orange-400 border border-orange-500/30 rounded-full text-sm font-medium"
+                  >
+                    {major}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

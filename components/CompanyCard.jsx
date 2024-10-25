@@ -4,9 +4,9 @@ const CompanyCard = ({ company, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
+      className="bg-navy-800 border border-navy-600 rounded-lg p-6 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer hover:scale-102 transform"
     >
-      <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+      <h3 className="text-lg font-semibold text-white hover:text-orange-400 transition-colors">
         {company.name}
       </h3>
     </div>

@@ -39,13 +39,24 @@ export async function POST(request) {
         // Connect to MongoDB
         await connectDB();
 
+        // Create case variations of the keyword
+        const keywordVariations = keyword ? [
+            keyword,
+            keyword.toLowerCase(),
+            keyword.toUpperCase(),
+            keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase() // Capitalized
+        ] : [];
+
+        // Remove duplicates from variations
+        const uniqueKeywordVariations = [...new Set(keywordVariations)];
+
         // Construct the query
         const query = {
             ...(major && { majors_hiring: major }),
             ...(keyword && {
                 $or: [
                     { $text: { $search: keyword } },
-                    { keywords: { $in: [keyword] } }
+                    { keywords: { $in: uniqueKeywordVariations } }
                 ]
             })
         };

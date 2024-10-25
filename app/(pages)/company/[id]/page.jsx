@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const CompanyDetails = ({ params: paramsPromise }) => {
   const router = useRouter();
-  const searchParams = useSearchParams(); // Get query params from URL
   const params = React.use(paramsPromise);
   const { id } = params;
   const [company, setCompany] = useState(null);
@@ -33,14 +32,6 @@ const CompanyDetails = ({ params: paramsPromise }) => {
     fetchCompanyDetails();
   }, [id]);
 
-  const handleBackToSearch = () => {
-    // Get the query parameters from the URL and pass them back
-    const major = searchParams.get("major");
-    const keyword = searchParams.get("keyword");
-
-    router.push(`/?major=${major}&keyword=${keyword}`); // Navigate back with queries intact
-  };
-
   if (loading)
     return (
       <div className="min-h-screen bg-navy-900 bg-gradient-to-b from-navy-800 to-navy-900">
@@ -67,7 +58,7 @@ const CompanyDetails = ({ params: paramsPromise }) => {
     <div className="min-h-screen bg-navy-900 bg-gradient-to-b from-navy-800 to-navy-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <button
-          onClick={handleBackToSearch}
+          onClick={() => router.back()}
           className="flex items-center space-x-2 text-orange-400 hover:text-orange-300 mb-8 transition-colors duration-200"
         >
           <svg

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { Suspense, useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { Suspense, useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import CompanyCard from "@/components/CompanyCard";
 
 const generateExcel = (companies) => {
@@ -16,49 +16,48 @@ const generateExcel = (companies) => {
   ].join("\n");
 
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
   link.setAttribute("href", url);
   link.setAttribute("download", "companies_to_apply.csv");
-  link.style.visibility = "hidden";
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };
 
+const majorOptions = [
+  "Accounting",
+  "Aerospace Engineering",
+  "Biomedical Engineering",
+  "Business",
+  "Chemical Engineering",
+  "Civil Engineering",
+  "Computer Engineering",
+  "Computer Science",
+  "Data Science",
+  "Economics",
+  "Electrical Engineering",
+  "Environmental Engineering",
+  "Finance",
+  "Industrial Engineering",
+  "Logistics",
+  "Marketing",
+  "Materials Science & Engineering",
+  "Mechanical Engineering",
+  "Nuclear Engineering",
+  "Systems Engineering",
+];
+
 const HomeContent = () => {
   const router = useRouter();
-  const searchParams = useSearchParams(); // Retrieve query params from the URL
-  const [major, setMajor] = useState(searchParams.get("major") || "");
-  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
+  const [major, setMajor] = useState("");
+  const [keyword, setKeyword] = useState("");
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
-
-  const majorOptions = [
-    "Accounting",
-    "Aerospace Engineering",
-    "Biomedical Engineering",
-    "Business",
-    "Chemical Engineering",
-    "Civil Engineering",
-    "Computer Engineering",
-    "Computer Science",
-    "Data Science",
-    "Economics",
-    "Electrical Engineering",
-    "Environmental Engineering",
-    "Finance",
-    "Industrial Engineering",
-    "Logistics",
-    "Marketing",
-    "Materials Science & Engineering",
-    "Mechanical Engineering",
-    "Nuclear Engineering",
-    "Systems Engineering",
-  ];
 
   const handleSearch = async () => {
     setLoading(true);
@@ -80,6 +79,7 @@ const HomeContent = () => {
         "searchParams",
         JSON.stringify({ major, keyword })
       );
+      setHasSearched(true);
     } catch (error) {
       setError("Failed to fetch companies. Please try again.");
     } finally {
@@ -92,10 +92,7 @@ const HomeContent = () => {
       generateExcel(companies);
     }
   };
-  const handleCompanyClick = (companyId) => {
-    // Pass the current search parameters when navigating to the company details page
-    router.push(`/company/${companyId}?major=${major}&keyword=${keyword}`);
-  };
+
   useEffect(() => {
     const savedResults = sessionStorage.getItem("searchResults");
     const savedParams = sessionStorage.getItem("searchParams");
@@ -121,7 +118,7 @@ const HomeContent = () => {
               <select
                 value={major}
                 onChange={(e) => setMajor(e.target.value)}
-                className="w-full p-4 border border-orange-500  rounded-lg bg-navy-800 text-white border-navy-600 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full p-4 border border-orange-500 rounded-lg bg-navy-800 text-white border-navy-600 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               >
                 <option value="">Select a major</option>
                 {majorOptions.map((option) => (
@@ -189,11 +186,7 @@ const HomeContent = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {companies.map((company) => (
-                  <CompanyCard
-                    key={company._id}
-                    company={company}
-                    onClick={() => handleCompanyClick(company._id)}
-                  />
+                  <CompanyCard key={company._id} company={company} />
                 ))}
                 {!hasSearched ? (
                   <div className="text-gray-300 col-span-full text-center">

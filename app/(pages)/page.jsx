@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import CompanyCard from "@/components/CompanyCard";
 
@@ -27,11 +27,11 @@ const generateExcel = (companies) => {
   URL.revokeObjectURL(url);
 };
 
-const Home = () => {
+const HomeContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams(); // Retrieve query params from the URL
-  const [major, setMajor] = useState(searchParams.get("major") || ""); // Initialize from query params
-  const [keyword, setKeyword] = useState(searchParams.get("keyword") || ""); // Initialize from query params
+  const [major, setMajor] = useState(searchParams.get("major") || "");
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") || "");
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -59,6 +59,7 @@ const Home = () => {
     "Nuclear Engineering",
     "Systems Engineering",
   ];
+
   const handleSearch = async () => {
     setLoading(true);
     setError("");
@@ -74,7 +75,6 @@ const Home = () => {
       if (!response.ok) throw new Error(data.error);
 
       setCompanies(data);
-      // Save search results and parameters to sessionStorage
       sessionStorage.setItem("searchResults", JSON.stringify(data));
       sessionStorage.setItem(
         "searchParams",
@@ -87,10 +87,6 @@ const Home = () => {
     }
   };
 
-  const handleCompanyClick = (companyId) => {
-    // Pass the current search parameters when navigating to the company details page
-    router.push(`/company/${companyId}?major=${major}&keyword=${keyword}`);
-  };
   const handleExport = () => {
     if (companies.length > 0) {
       generateExcel(companies);
@@ -213,5 +209,11 @@ const Home = () => {
     </div>
   );
 };
+
+const Home = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <HomeContent />
+  </Suspense>
+);
 
 export default Home;

@@ -133,66 +133,69 @@ const HomeContent = () => {
 
         <div className="max-w-2xl mx-auto space-y-8">
           <div className="flex flex-col space-y-4">
-            <div className="relative">
-              <select
-                value={major}
-                onChange={(e) => setMajor(e.target.value)}
-                className="w-full p-4 border border-orange-500 rounded-lg bg-navy-800 text-white border-navy-600 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              >
-                <option value="">Select a major</option>
-                {majorOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
-                <svg
-                  className="w-4 h-4 fill-current"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
+            {/* Reduced width container for desktop */}
+            <div className="w-full md:w-[70%] mx-auto">
+              <div className="relative">
+                <select
+                  value={major}
+                  onChange={(e) => setMajor(e.target.value)}
+                  className="w-full p-4 border border-orange-500 rounded-lg bg-navy-800 text-white border-navy-600 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  placeholder="Enter keywords (e.g. medicine, BP)"
-                  value={keywordInput}
-                  onChange={(e) => setKeywordInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="flex-1 p-4 border rounded-lg bg-navy-800 text-white border-orange-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                />
-                <button
-                  onClick={handleAddKeyword}
-                  className="px-4 bg-orange-500 text-navy-600 font-bold rounded-lg hover:bg-orange-600 transition-colors duration-200 ease-in-out"
-                >
-                  Add
-                </button>
-              </div>
-
-              {keywords.length > 0 && (
-                <div className="flex flex-wrap gap-2 p-2">
-                  {keywords.map((keyword, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-500 text-navy-600 font-bold"
-                    >
-                      {keyword}
-                      <button
-                        onClick={() => handleRemoveKeyword(keyword)}
-                        className="ml-2 focus:outline-none"
-                      >
-                        ×
-                      </button>
-                    </span>
+                  <option value="">Select a major</option>
+                  {majorOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
                   ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
+                  <svg
+                    className="w-4 h-4 fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
                 </div>
-              )}
+              </div>
+
+              <div className="space-y-2 mt-4">
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    placeholder="Enter keywords (e.g. medicine, BP)"
+                    value={keywordInput}
+                    onChange={(e) => setKeywordInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    className="flex-1 p-4 border rounded-lg bg-navy-800 text-white border-orange-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                  <button
+                    onClick={handleAddKeyword}
+                    className="px-4 bg-orange-500 text-navy-600 font-bold rounded-lg hover:bg-orange-600 transition-colors duration-200 ease-in-out"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                {keywords.length > 0 && (
+                  <div className="flex flex-wrap gap-2 p-2">
+                    {keywords.map((keyword, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-500 text-navy-600 font-bold"
+                      >
+                        {keyword}
+                        <button
+                          onClick={() => handleRemoveKeyword(keyword)}
+                          className="ml-2 focus:outline-none"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">

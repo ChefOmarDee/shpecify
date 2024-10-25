@@ -1,9 +1,10 @@
-// First, let's update the API route (api/search/route.js)
 import { NextResponse } from "next/server";
 import mongoose from 'mongoose';
 
+// MongoDB connection function
 async function connectDB() {
     if (mongoose.connections[0].readyState) return;
+    
     try {
         await mongoose.connect(process.env.MONGODB_URI);
         console.log('Connected to MongoDB');
@@ -13,6 +14,7 @@ async function connectDB() {
     }
 }
 
+// Define Company Schema
 const companySchema = new mongoose.Schema({
     name: { type: String, required: true },
     about: { type: String, required: true },
@@ -22,67 +24,49 @@ const companySchema = new mongoose.Schema({
     keywords: { type: [String] }
 });
 
-// Add text index for company name
-companySchema.index({ name: 'text', about: 'text', business_model: 'text', example_projects: 'text' });
+// Create text index on specific fields
+companySchema.index({ about: 'text', business_model: 'text', example_projects: 'text' });
 companySchema.index({ keywords: 1 });
 
+// Get the Company model (with protection against model recompilation)
 const Company = mongoose.models.Company || mongoose.model('Company', companySchema);
 
 export async function POST(request) {
     try {
-        const { major, keyword, companyName } = await request.json();
+        // Get search parameters from request body
+        const { major, keyword } = await request.json();
+
+        // Connect to MongoDB
         await connectDB();
 
-        let query = {};
+        // Create case variations of the keyword
+        const keywordVariations = keyword ? [
+            keyword,
+            keyword.toLowerCase(),
+            keyword.toUpperCase(),
+            keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase() // Capitalized
+        ] : [];
 
-        // Add major filter if provided
-        if (major) {
-            query.majors_hiring = major;
-        }
+        // Remove duplicates from variations
+        const uniqueKeywordVariations = [...new Set(keywordVariations)];
 
-        // Add keyword search if provided
-        if (keyword) {
-            const keywordVariations = [
-                keyword,
-                keyword.toLowerCase(),
-                keyword.toUpperCase(),
-                keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()
-            ];
-            const uniqueKeywordVariations = [...new Set(keywordVariations)];
+        // Construct the query
+        const query = {
+            ...(major && { majors_hiring: major }),
+            ...(keyword && {
+                $or: [
+                    { $text: { $search: keyword } },
+                    { keywords: { $in: uniqueKeywordVariations } }
+                ]
+            })
+        };
 
-            query.$or = [
-                { $text: { $search: keyword } },
-                { keywords: { $in: uniqueKeywordVariations } }
-            ];
-        }
-
-        // Add company name search if provided
-        if (companyName) {
-            // If there's already an $or, we need to use $and to combine conditions
-            if (query.$or) {
-                query = {
-                    $and: [
-                        { ...query },
-                        {
-                            $or: [
-                                { name: { $regex: companyName, $options: 'i' } },
-                                { name: { $regex: companyName.split('').join('.*'), $options: 'i' } }
-                            ]
-                        }
-                    ]
-                };
-            } else {
-                query.$or = [
-                    { name: { $regex: companyName, $options: 'i' } },
-                    { name: { $regex: companyName.split('').join('.*'), $options: 'i' } }
-                ];
-            }
-        }
-
+        // Execute the query with only _id and name fields
         const companies = await Company.find(query)
-            .select('_id name')
-            .lean();
+            .select('_id name')  // Only return _id and name fields
+            .lean();  // Convert to plain JavaScript objects for better performance
 
+        // Return the results
         return NextResponse.json(companies, { status: 200 });
 
     } catch (error) {

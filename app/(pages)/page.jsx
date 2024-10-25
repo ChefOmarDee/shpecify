@@ -31,7 +31,6 @@ const Home = () => {
   const router = useRouter();
   const [major, setMajor] = useState("");
   const [keyword, setKeyword] = useState("");
-  const [companyName, setCompanyName] = useState("");
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -71,7 +70,7 @@ const Home = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ major, keyword, companyName }),
+        body: JSON.stringify({ major, keyword }),
       });
 
       const data = await response.json();
@@ -105,16 +104,6 @@ const Home = () => {
 
         <div className="max-w-2xl mx-auto space-y-8">
           <div className="flex flex-col space-y-4">
-            {/* Company Name Search */}
-            <input
-              type="text"
-              placeholder="Search by company name"
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full p-4 border rounded-lg bg-navy-800 text-white border-navy-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            />
-
-            {/* Existing Major Dropdown */}
             <div className="relative">
               <select
                 value={major}
@@ -139,7 +128,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Existing Keyword Search */}
             <input
               type="text"
               placeholder="Enter keyword"

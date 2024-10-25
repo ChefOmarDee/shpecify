@@ -13,7 +13,7 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "SHPEcificy",
+  title: "SHPEcify",
   description: "The SHPEcificy allows you to find jobs at the shpe convention that match you.",
 };
 

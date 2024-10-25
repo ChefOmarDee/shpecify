@@ -161,7 +161,7 @@ const HomeContent = () => {
               <div className="flex space-x-2">
                 <input
                   type="text"
-                  placeholder="Enter keywords (e.g. medicine, metaa)"
+                  placeholder="Enter keywords (e.g. medicine, BP)"
                   value={keywordInput}
                   onChange={(e) => setKeywordInput(e.target.value)}
                   onKeyPress={handleKeyPress}

@@ -14,7 +14,7 @@ const geistMono = localFont({
 
 export const metadata = {
   title: "SHPEcify",
-  description: "The SHPEcificy allows you to find jobs at the shpe convention that match you.",
+  description: "SHPEcify helps you discover companies at the SHPE convention that align with you.",
 };
 
 export default function RootLayout({ children }) {

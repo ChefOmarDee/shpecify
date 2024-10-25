@@ -92,7 +92,10 @@ const HomeContent = () => {
       generateExcel(companies);
     }
   };
-
+  const handleCompanyClick = (companyId) => {
+    // Pass the current search parameters when navigating to the company details page
+    router.push(`/company/${companyId}?major=${major}&keyword=${keyword}`);
+  };
   useEffect(() => {
     const savedResults = sessionStorage.getItem("searchResults");
     const savedParams = sessionStorage.getItem("searchParams");

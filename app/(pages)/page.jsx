@@ -161,7 +161,7 @@ const HomeContent = () => {
               <div className="flex space-x-2">
                 <input
                   type="text"
-                  placeholder="Enter keywords (e.g. energy, software)"
+                  placeholder="Enter keywords (e.g. medicine, metaa)"
                   value={keywordInput}
                   onChange={(e) => setKeywordInput(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -169,7 +169,7 @@ const HomeContent = () => {
                 />
                 <button
                   onClick={handleAddKeyword}
-                  className="px-4 bg-orange-500 text-navy-600 rounded-lg hover:bg-orange-600 transition-colors duration-200 ease-in-out"
+                  className="px-4 bg-orange-500 text-navy-600 font-bold rounded-lg hover:bg-orange-600 transition-colors duration-200 ease-in-out"
                 >
                   Add
                 </button>
@@ -180,7 +180,7 @@ const HomeContent = () => {
                   {keywords.map((keyword, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-500 text-navy-600"
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-500 text-navy-600 font-bold"
                     >
                       {keyword}
                       <button
@@ -199,7 +199,7 @@ const HomeContent = () => {
               <button
                 onClick={handleSearch}
                 disabled={loading}
-                className="px-8 py-4 bg-orange-500 text-navy-600 rounded-lg hover:bg-orange-600 disabled:bg-gray-400 transition-colors duration-200 ease-in-out"
+                className="px-8 py-4 bg-orange-500 text-navy-600 font-bold rounded-lg hover:bg-orange-600 disabled:bg-gray-400 transition-colors duration-200 ease-in-out"
               >
                 {loading ? "Searching..." : "Search"}
               </button>

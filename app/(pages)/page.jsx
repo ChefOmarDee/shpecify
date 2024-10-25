@@ -53,11 +53,30 @@ const majorOptions = [
 const HomeContent = () => {
   const router = useRouter();
   const [major, setMajor] = useState("");
-  const [keyword, setKeyword] = useState("");
+  const [keywords, setKeywords] = useState([]);
+  const [keywordInput, setKeywordInput] = useState("");
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
+
+  const handleAddKeyword = () => {
+    if (keywordInput.trim() && !keywords.includes(keywordInput.trim())) {
+      setKeywords([...keywords, keywordInput.trim()]);
+      setKeywordInput("");
+    }
+  };
+
+  const handleRemoveKeyword = (keywordToRemove) => {
+    setKeywords(keywords.filter((k) => k !== keywordToRemove));
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddKeyword();
+    }
+  };
 
   const handleSearch = async () => {
     setLoading(true);
@@ -67,7 +86,7 @@ const HomeContent = () => {
       const response = await fetch("/api/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ major, keyword }),
+        body: JSON.stringify({ major, keywords }),
       });
 
       const data = await response.json();
@@ -77,7 +96,7 @@ const HomeContent = () => {
       sessionStorage.setItem("searchResults", JSON.stringify(data));
       sessionStorage.setItem(
         "searchParams",
-        JSON.stringify({ major, keyword })
+        JSON.stringify({ major, keywords })
       );
       setHasSearched(true);
     } catch (error) {
@@ -99,9 +118,9 @@ const HomeContent = () => {
 
     if (savedResults && savedParams) {
       setCompanies(JSON.parse(savedResults));
-      const { major, keyword } = JSON.parse(savedParams);
+      const { major, keywords } = JSON.parse(savedParams);
       setMajor(major);
-      setKeyword(keyword);
+      setKeywords(keywords || []);
     }
   }, []);
 
@@ -138,19 +157,49 @@ const HomeContent = () => {
               </div>
             </div>
 
-            <input
-              type="text"
-              placeholder="Enter keyword, such as 'medicine' or 'energy'"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              className="w-full p-4 border rounded-lg bg-navy-800 text-white border-orange-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            />
+            <div className="space-y-2">
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  placeholder="Enter keywords (e.g. energy, software)"
+                  value={keywordInput}
+                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="flex-1 p-4 border rounded-lg bg-navy-800 text-white border-orange-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+                <button
+                  onClick={handleAddKeyword}
+                  className="px-4 bg-orange-500 text-navy-600 rounded-lg hover:bg-orange-600 transition-colors duration-200 ease-in-out"
+                >
+                  Add
+                </button>
+              </div>
+
+              {keywords.length > 0 && (
+                <div className="flex flex-wrap gap-2 p-2">
+                  {keywords.map((keyword, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-orange-500 text-navy-600"
+                    >
+                      {keyword}
+                      <button
+                        onClick={() => handleRemoveKeyword(keyword)}
+                        className="ml-2 focus:outline-none"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
               <button
                 onClick={handleSearch}
                 disabled={loading}
-                className="px-8 py-4 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:bg-gray-400 transition-colors duration-200 ease-in-out"
+                className="px-8 py-4 bg-orange-500 text-navy-600 rounded-lg hover:bg-orange-600 disabled:bg-gray-400 transition-colors duration-200 ease-in-out"
               >
                 {loading ? "Searching..." : "Search"}
               </button>
